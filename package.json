@@ -16,8 +16,7 @@
     "lint:prettier": "prettier \"**/*.(md|json|yml)\" --ignore-path .gitignore --check",
     "lint:type": "tsc --noEmit",
     "test": "jest",
-    "ci:test": "run-s \" test --ci --reporters=\"default\" --reporters=\"github-actions\" \"",
-    "prepare": "simple-git-hooks"
+    "ci:test": "run-s \" test --ci --reporters=\"default\" --reporters=\"github-actions\" \""
   },
   "dependencies": {
     "@eduardoac-skimlinks/webext-redux": "3.0.1-release-candidate",
