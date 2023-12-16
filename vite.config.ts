@@ -4,8 +4,7 @@ import { join, resolve } from 'path';
 import { defineConfig } from 'vite';
 import manifest from './src/manifest';
 
-console.debug(`### virwe.config.js ###`);
-
+console.debug(`### vite.config.js ###`);
 console.debug(`dist: [${resolve(__dirname, 'dist')}]`);
 
 export default defineConfig({
