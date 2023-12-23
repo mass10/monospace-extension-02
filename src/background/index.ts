@@ -1,19 +1,30 @@
 import browser from 'webextension-polyfill';
 import store, { initializeWrappedStore } from '../app/store';
+import { Logger } from '../utils/Logger';
 
-initializeWrappedStore();
+/**
+ * バックグラウンドスクリプトのエントリーポイント
+ */
+function main(): void {
+  Logger.info('background script started.');
 
-store.subscribe(() => {
-  // access store state
-  // const state = store.getState();
-  // console.log('state', state);
-});
+  initializeWrappedStore();
 
-// show welcome page on new install
-browser.runtime.onInstalled.addListener(async (details) => {
-  if (details.reason === 'install') {
-    //show the welcome page
-    const url = browser.runtime.getURL('welcome/welcome.html');
-    await browser.tabs.create({ url });
-  }
-});
+  store.subscribe(() => {
+    // access store state
+    // const state = store.getState();
+    // console.log('state', state);
+  });
+
+  // show welcome page on new install
+  browser.runtime.onInstalled.addListener(async (details) => {
+    if (details.reason === 'install') {
+      //show the welcome page
+      const url = browser.runtime.getURL('src/welcome/welcome.html');
+      await browser.tabs.create({ url });
+    }
+  });
+}
+
+// バックグラウンドスクリプトの実行
+main();
