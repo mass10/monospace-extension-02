@@ -3,8 +3,7 @@ import 'construct-style-sheets-polyfill';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { debounce } from 'lodash-es';
-import { twind, config, cssom, observe, stringify } from './twind';
+import { twind, config, cssom, observe } from './twind';
 import { proxyStore } from '../app/proxyStore';
 import Content from './Content';
 import { Logger } from '../utils/Logger';
@@ -18,7 +17,7 @@ function setMonospace(element: Element): void {
   try {
     const el = element as HTMLElement;
     const styles = el.style;
-    if (styles.fontFamily !== "'BIZ UD明朝 Medium', monospace") {
+    if (styles.fontFamily.indexOf('BIZ UD明朝 Medium') === -1) {
       styles.fontFamily = "'BIZ UD明朝 Medium', monospace";
     }
   } catch (error) {
@@ -31,14 +30,15 @@ function setMonospace(element: Element): void {
  */
 async function testSearchGoogleDriveItems(): Promise<void> {
   try {
+    // Finding the starting element
     const driveMainPage = document.querySelector('div[id="drive_main_page"]');
     if (!driveMainPage) {
-      // 起点となる要素が見つからない場合は何もしません。
+      Logger.warn(`(CONTENT) drive_main_page not found`);
       return;
     }
 
+    // Make tree items monospace
     {
-      // ツリーアイテムの等幅(by role)
       for (const navigation of document.querySelectorAll('nav[role="navigation"]')) {
         for (const item of navigation.querySelectorAll('div[role="treeitem"]')) {
           setMonospace(item);
@@ -46,32 +46,32 @@ async function testSearchGoogleDriveItems(): Promise<void> {
       }
     }
 
+    // Make grid lines monospace
     {
-      // リストアイテムの等幅(by class)
-      for (const item of driveMainPage.querySelectorAll('div[class="KL4NAf"]')) {
-        setMonospace(item);
+      for (const row of driveMainPage.querySelectorAll('div[role="gridcell"]')) {
+        for (const item of row.querySelectorAll('div[class="KL4NAf"]')) {
+          // Name
+          setMonospace(item);
+        }
+        for (const item of row.querySelectorAll('span[class="rprYvc"]')) {
+          // Owner
+          setMonospace(item);
+        }
+        for (const item of row.querySelectorAll('span[class="jApF8d"]')) {
+          // Last modified, Size
+          setMonospace(item);
+        }
       }
     }
 
-    // {
-    //   const query = 'div[data-tooltip^="Google Drive Folder:"]';
-    //   const items = driveMainPage.querySelectorAll(query);
-    //   // const items = document.querySelectorAll(query);
-    //   for (const item of items) {
-    //     // Logger.debug(`Google Drive Folder:`, item);
-    //     setMonospace(item);
-    //   }
-    // }
-
-    // {
-    //   const query = 'div[data-tooltip^="Image:"]';
-    //   const items = driveMainPage.querySelectorAll(query);
-    //   // const items = document.querySelectorAll(query);
-    //   for (const item of items) {
-    //     // Logger.debug(`Image:`, item);
-    //     setMonospace(item);
-    //   }
-    // }
+    //
+    {
+      for (const main of driveMainPage.querySelectorAll('div[role="main"]')) {
+        for (const item of main.querySelectorAll('div[jscontroller="NEq59c"]')) {
+          setMonospace(item);
+        }
+      }
+    }
   } catch (error) {
     Logger.error(error);
   }
@@ -83,6 +83,10 @@ function onReadyStore(): void {
   // Google Drive の行アイテムを見やすくします。
   window.setInterval(testSearchGoogleDriveItems, 1000 * 6);
 
+  createContentRoot();
+}
+
+function createContentRoot(): void {
   const contentRoot = document.createElement('div');
   contentRoot.id = 'my-extension-root';
   contentRoot.style.display = 'contents';
@@ -91,20 +95,8 @@ function onReadyStore(): void {
   const shadowRoot = contentRoot.attachShadow({ mode: 'open' });
   const sheet = cssom(new CSSStyleSheet());
 
-  // shadowRoot.adoptedStyleSheet bug in firefox
-  // see: https://bugzilla.mozilla.org/show_bug.cgi?id=1827104
   if (navigator?.userAgent.includes('Firefox')) {
-    const style = document.createElement('style');
-    const debouncedSyncCss = debounce(() => {
-      style.textContent += stringify(sheet.target);
-    }, 100);
-
-    const originalSheetInsert = sheet.insert;
-    (sheet.insert as typeof originalSheetInsert) = (...params) => {
-      originalSheetInsert(...params);
-      debouncedSyncCss();
-    };
-    shadowRoot.appendChild(style);
+    //
   } else {
     shadowRoot.adoptedStyleSheets = [sheet.target];
   }
