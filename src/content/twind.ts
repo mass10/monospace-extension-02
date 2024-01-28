@@ -3,17 +3,17 @@
 // as close as possible with this config
 // @see https://twind.style/
 
-import { defineConfig } from '@twind/core';
-import presetAutoprefix from '@twind/preset-autoprefix';
-import presetTailwind from '@twind/preset-tailwind';
+import { defineConfig } from "@twind/core";
+import presetAutoprefix from "@twind/preset-autoprefix";
+import presetTailwind from "@twind/preset-tailwind";
 
-import resolveConfig from 'tailwindcss/resolveConfig';
-import tailwindConfig from '../../tailwind.config';
+import resolveConfig from "tailwindcss/resolveConfig";
+import tailwindConfig from "../../tailwind.config";
 const fullConfig = resolveConfig(tailwindConfig);
 
 export const config = defineConfig({
-  ...fullConfig,
-  presets: [presetAutoprefix(), presetTailwind()],
+	...fullConfig,
+	presets: [presetAutoprefix(), presetTailwind()],
 });
 
-export * from '@twind/core';
+export * from "@twind/core";

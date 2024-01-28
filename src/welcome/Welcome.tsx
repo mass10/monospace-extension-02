@@ -1,11 +1,11 @@
-import React from 'react';
-import { Logger } from '../utils/Logger';
+import React from "react";
+import { Logger } from "../utils/Logger";
 
 const Welcome = () => {
 	React.useEffect(() => {
-		Logger.debug('Welcome page loaded');
+		Logger.debug("Welcome page loaded");
 		return () => {
-			Logger.debug('Welcome page unloaded');
+			Logger.debug("Welcome page unloaded");
 		};
 	}, []);
 
