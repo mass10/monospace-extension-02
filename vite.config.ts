@@ -16,15 +16,23 @@ export default defineConfig({
       port: 5173,
     },
   },
+
   // prevent src/ prefix on extension urls
-  root: resolve(__dirname, 'src'),
-  publicDir: resolve(__dirname, 'public'),
+  // root: resolve(__dirname, 'src'),
+  // root: 'src',
+
+  // publicDir: resolve(__dirname, 'public'),
+  publicDir: 'public',
+
   build: {
-    outDir: resolve(__dirname, 'dist'),
+    // outDir: resolve(__dirname, 'dist'),
+    outDir: 'dist',
+
     rollupOptions: {
       input: {
         // see web_accessible_resources in the manifest config
-        welcome: join(__dirname, 'src/welcome/welcome.html'),
+        // welcome: join(__dirname, 'src/welcome/welcome.html'),
+        welcome: 'src/welcome/welcome.html',
       },
       output: {
         chunkFileNames: 'assets/chunk-[hash].js',

@@ -11,30 +11,30 @@ const manifest = defineManifest(async (env) => ({
   description: 'Monospace Extension',
   version,
   background: {
-    service_worker: 'background/index.ts',
+    service_worker: 'src/background/index.ts',
   },
   content_scripts: [
     {
       matches: ['http://*/*', 'https://*/*', 'file:///*'],
-      js: ['content/index.tsx'],
+      js: ['src/content/index.tsx'],
     },
   ],
   host_permissions: ['<all_urls>'],
   options_ui: {
-    page: 'options/options.html',
+    page: 'src/options/options.html',
     open_in_tab: true,
   },
   web_accessible_resources: [
     {
       resources: [
         // this file is web accessible; it supports HMR b/c it's declared in `rollupOptions.input`
-        'welcome/welcome.html',
+        'src/welcome/welcome.html',
       ],
       matches: ['<all_urls>'],
     },
   ],
   action: {
-    default_popup: 'popup/popup.html',
+    default_popup: 'src/popup/popup.html',
     default_icon: {
       '16': 'images/extension_16.png',
       '32': 'images/extension_32.png',

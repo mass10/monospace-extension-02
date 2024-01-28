@@ -11,7 +11,7 @@ import { Logger } from '../utils/Logger';
 Logger.info('Welcome page loaded');
 
 createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <Welcome />
-  </React.StrictMode>
+	<React.StrictMode>
+		<Welcome />
+	</React.StrictMode>
 );
